@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <locale.h>
 
+//Olá carol
+
 // Estrutura para representar um destino de viagem
 typedef struct {
     char nome[50];
