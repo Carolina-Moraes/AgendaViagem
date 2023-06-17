@@ -1,0 +1,2 @@
+gcc -o hello .\(nome do arquivo).c
+.\hello.exe
