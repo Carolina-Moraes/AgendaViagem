@@ -5,83 +5,90 @@
 #include <string.h>
 #include <ctype.h>
 
-//Ol· carol
+// Ol√° carol
 
 // Estrutura para representar uma cidade
-typedef struct {
-    int codcity;        // CÛdigo da cidade, serve pra ver todos os lugares de uma mesma cidade
-    char nomecity[50];  // Nome
+typedef struct
+{
+    int codcity;       // C√≥digo da cidade, serve pra ver todos os lugares de uma mesma cidade
+    char nomecity[50]; // Nome
 } Cidade;
 
-//struct para ponto de visita
-typedef struct{
+// struct para ponto de visita
+typedef struct
+{
     int tipo;           // 1 hotel, 2 restaurante
-    int codcity;        // CÛdigo da cidade na qual o lugar est·, deve ser o mesmo cÛdigo da struct cidade
-    int lugar;          // CÛdigo para o hotel ou restaurante, ainda n„o sei se vai ser necess·rio isso
+    int codcity;        // C√≥digo da cidade na qual o lugar est√°, deve ser o mesmo c√≥digo da struct cidade
+    int lugar;          // C√≥digo para o hotel ou restaurante, ainda n√£o sei se vai ser necess√°rio isso
     char nomelugar[50]; // Nome do lugar
-    int tipopreco;      // Tipo do preÁo: 1 baixo, 2 medio, 3 alto
-    float preco;        // O preÁo em si
+    int tipopreco;      // Tipo do pre√ßo: 1 baixo, 2 medio, 3 alto
+    float preco;        // O pre√ßo em si
 
-}Visita;
+} Visita;
 
 // Estrutura para representar um destino de viagem
-typedef struct {
+typedef struct
+{
     char nome[50];
     float precoHotel;
     float precoRestaurante;
 } Destino;
 
-//struct para hotel
-typedef struct{
+// struct para hotel
+typedef struct
+{
     char nome[50];
     float precodiaria;
-}hotel;
+} hotel;
 
-//struct para restaurante
-typedef struct{
+// struct para restaurante
+typedef struct
+{
     char nome[50];
     float precomedio;
-}restaurante;
+} restaurante;
 
 // Estrutura para representar um feriado
-typedef struct {
+typedef struct
+{
     int dia;
     int mes;
     char nome[50];
     int tipo;
     int facultativo;
-}Feriado;
+} Feriado;
 
-
-// FunÁ„o para cadastrar feriados por estados
-void cadastroFeriados() {
+// Fun√ß√£o para cadastrar feriados por estados
+void cadastroFeriados()
+{
 
     /*
     CADASTRO:
-  	char mes[25]={0}, dia[2]={0}, separador[5]={" de "}, resp;
-	fflush(stdin);
-	printf("Deseja cadastrar um feriado? (s/n)");
-	scanf("%c", &resp);
-	resp = tolower(resp);
-	if (resp == 's'){
-		fflush(stdin);
-  		printf("\nDigite o mes que deseja cadastrar o feriado: ");
-  		gets(mes);
-  		fflush(stdin);
-  		printf("\nDigite o dia que deseja cadastrar o feriado: ");
-  		gets(dia);
-  		strcat(dia, separador);
-  		strcat(dia, mes); 
-  		puts(dia);
-  		goto CADASTRO;
-	}*/
+    char mes[25]={0}, dia[2]={0}, separador[5]={" de "}, resp;
+    fflush(stdin);
+    printf("Deseja cadastrar um feriado? (s/n)");
+    scanf("%c", &resp);
+    resp = tolower(resp);
+    if (resp == 's'){
+        fflush(stdin);
+        printf("\nDigite o mes que deseja cadastrar o feriado: ");
+        gets(mes);
+        fflush(stdin);
+        printf("\nDigite o dia que deseja cadastrar o feriado: ");
+        gets(dia);
+        strcat(dia, separador);
+        strcat(dia, mes);
+        puts(dia);
+        goto CADASTRO;
+    }*/
 }
 
-
-// FunÁ„o para adicionar um destino de viagem
-void adicionarDestino(Destino destinos[], int *numDestinos) {
-    if (*numDestinos >= 10) {
-        printf("Limite m·ximo de destinos alcanÁado.\n");
+// Fun√ß√£o para adicionar um destino de viagem
+void adicionarDestino(Destino destinos[], int *numDestinos)
+{
+    if (*numDestinos >= 10)
+    {
+        printf("Limite m√°ximo de destinos alcan√ßado.\n");
         return;
     }
 
@@ -90,10 +97,10 @@ void adicionarDestino(Destino destinos[], int *numDestinos) {
     printf("Informe o nome do destino: ");
     scanf("%s", novoDestino.nome);
 
-    printf("Informe o preÁo mÈdio do hotel: ");
+    printf("Informe o pre√ßo m√©dio do hotel: ");
     scanf("%f", &novoDestino.precoHotel);
 
-    printf("Informe o preÁo mÈdio do restaurante: ");
+    printf("Informe o pre√ßo m√©dio do restaurante: ");
     scanf("%f", &novoDestino.precoRestaurante);
 
     destinos[*numDestinos] = novoDestino;
@@ -102,16 +109,19 @@ void adicionarDestino(Destino destinos[], int *numDestinos) {
     printf("Destino adicionado com sucesso!\n");
 }
 
-// FunÁ„o para obter informa??es de hot?is e restaurantes
-void obterInformacoes(Destino destinos[], int numDestinos) {
-    if (numDestinos == 0) {
+// Fun√ß√£o para obter informa??es de hot?is e restaurantes
+void obterInformacoes(Destino destinos[], int numDestinos)
+{
+    if (numDestinos == 0)
+    {
         printf("Nenhum destino adicionado ainda.\n");
         return;
     }
 
     printf("===== DESTINOS DE VIAGEM =====\n");
 
-    for (int i = 0; i < numDestinos; i++) {
+    for (int i = 0; i < numDestinos; i++)
+    {
         printf("%d. %s\n", i + 1, destinos[i].nome);
     }
 
@@ -121,30 +131,197 @@ void obterInformacoes(Destino destinos[], int numDestinos) {
     int escolha;
     scanf("%d", &escolha);
 
-    if (escolha < 1 || escolha > numDestinos) {
-        printf("Destino inv·lido.\n");
+    if (escolha < 1 || escolha > numDestinos)
+    {
+        printf("Destino inv√°lido.\n");
         return;
     }
 
     Destino destinoEscolhido = destinos[escolha - 1];
 
     printf("Nome: %s\n", destinoEscolhido.nome);
-    printf("PreÁo mÈdio do hotel: %.2f\n", destinoEscolhido.precoHotel);
-    printf("PreÁo mÈdio do restaurante: %.2f\n", destinoEscolhido.precoRestaurante);
+    printf("Pre√ßo m√©dio do hotel: %.2f\n", destinoEscolhido.precoHotel);
+    printf("Pre√ßo m√©dio do restaurante: %.2f\n", destinoEscolhido.precoRestaurante);
 }
 
-// FunÁ„o para calcular custos de transporte
-void calcularCustosTransporte() {
-   
+// Fun√ß√£o para selecionar os hoteis
+Hotel()
+{
+}
+// Fun√ß√£o para informar sobre o hotel
+float Hotel()
+{
+    char cidade[50];
+    char hotel[50];
+    float valorEstadia;
+    int quantidade;
+
+    printf("\n ==================== Hotel ====================\n\n");
+    printf("Digite o nome da cidade: ");
+    scanf(" %[^\n]", cidade);
+    printf("Digite o nome do hotel: ");
+    scanf(" %[^\n]", hotel);
+    printf("Digite o valor da estadia: ");
+    scanf("%f", &valorEstadia);
+
+    printf("Digite a quantidade de dias que voc√™ ficar√° hopedado: ");
+    scanf("%d", &quantidade);
+
+    float valorTotalHotel = valorEstadia * quantidade;
+
+    printf("\n------------------------------------------------------\n\n");
+    printf("\n ==================== Relat√≥rio do Restaurante ====================\n");
+    printf("\nCidade: %s\n", cidade);
+    printf("Hotel: %s\n", hotel);
+    printf("Valor da Refeicao: R$ %.2f\n", valorEstadia);
+    printf("Quantidade de Vezes: %d\n", quantidade);
+    printf("Valor Total: R$ %.2f\n", valorTotalHotel);
+
+    return (valorTotalHotel);
 }
 
-// FunÁ„o para gerar relat?rio de viagem
-void gerarRelatorio(Destino destinos[], int numDestinos) {
+// Fun√ß√£o para informar sobre a alimenta√ß√£o
+float Alimentacao()
+{
+    char cidade[50];
+    char refeicao[50];
+    float valorRefeicao;
+    int quantidade;
+
+    printf("\n ==================== Alimenta√ß√£o ====================\n\n");
+    printf("Digite o nome da cidade: ");
+    scanf(" %[^\n]", cidade);
+    printf("Digite o valor que voc√™ pretende gastar com cada refei√ß√£o: ");
+    scanf("%f", &valorRefeicao);
+
+    printf("Digite a quantidade de vezes que voc√™ ir√° comer nesse restaurante: ");
+    scanf("%d", &quantidade);
+
+    float valorTotalRefeicao = valorRefeicao * quantidade;
+
+    printf("\n------------------------------------------------------\n\n");
+    printf("\n ==================== Relat√≥rio do Restaurante ====================\n");
+    printf("\nCidade: %s\n", cidade);
+    printf("Valor da Refeicao: R$ %.2f\n", valorRefeicao);
+    printf("Quantidade de Vezes: %d\n", quantidade);
+    printf("Valor Total: R$ %.2f\n", valorTotalRefeicao);
+
+    return (valorTotalRefeicao);
+}
+/*// Fun√ß√£o para selecionar a cidade do restaurante
+void menuRestaurantes() {
+    printf(" ===== Selecionar cidade do Rio Grande do Sul =====\n");
+   int x;
+    do{
+        system("cls");
+        printf("\n\n==================== Menu Restaurantes ====================\n");
+        printf("1. Voltar\n");
+        printf("2. Gramado\n");
+        printf("3. Bento Gon√ßalves\n");
+        printf("4. Canela\n");
+        printf("5. Nova petr√≥pilis\n");
+        printf("6. Caxias do Sul\n");
+        printf("7. Porto Alegre\n");
+        printf("8. Farroupilha\n");
+        printf("9: Sair\n");
+        printf("========================================================\n\n");
+        printf("Escolha uma op√ß√£o: ");
+        scanf("%d", &x);
+        system("cls");
+        switch (x) {
+                case 1:
+                    return;
+                    break;
+                case 2:
+                    gramadoRestaurante();
+                    break;
+                case 3:
+                    bentogoncalvesRestaurante();
+                    break;
+                case 4:
+                    canelaRestaurante();
+                    break;
+                case 5:
+                    novapetropolisRestaurante();
+                    break;
+                case 6:
+                    caxiasdosulRestaurante();
+                    break;
+                case 7:
+                   portoalegreRestaurante();
+                    break;
+                case 8:
+                    farroupilhaRestaurante();
+                    break;
+                case 9:
+                        printf("\nSaindo...\n");
+                    break;
+                default:
+                    printf("====================!!! OP√á√ÉO INV√ÅLIDA !!!====================\n");
+                    printf("\n");
+                    printf("Pressione qualquer tecla para tentar novamente.\n");
+                    getch();
+                    break;
+        }
+    }while(x<1 || x>9);
+}
+
+// Fun√ß√£o para selecionar o restaurante de Gramado
+void gramadoRestaurante() {
+    printf(" ===== Selecione o restaurante que voc√™ deseja =====\n");
+   int x;
+    do{
+        system("cls");
+        printf("\n\n==================== Menu Restaurantes ====================\n");
+        printf("1. Le Grand Burguer a partir de R$21,90\n");
+        printf("2. Carlito‚Äôs Restaurante a partir de R$30,00\n");
+        printf("3. Maison de La Fondue, a partir de R$76,90\n");
+
+}
+}
+
+// Fun√ß√£o para selecionar o restaurante de Bento Gon√ßalves
+void bentogoncalvesRestaurante() {
+
+}
+
+// Fun√ß√£o para selecionar o restaurante de Canela
+void canelaRestaurante() {
+
+}
+
+// Fun√ß√£o para selecionar o restaurante de Nova petr√≥polis
+void novapetropolisRestaurante() {
+
+}
+
+// Fun√ß√£o para selecionar o restaurante de Caxias do Sul
+void caxiasdosulRestaurante() {
+
+}
+// Fun√ß√£o para selecionar o restaurante de Porto Alegre
+void portoalegreRestaurante() {
 
 }
 
 
-void cadastroCidade(){
+// Fun√ß√£o para selecionar o restaurante de Farroupilha
+void farroupilhaRestaurante()
+{
+}
+*/
+// Fun√ß√£o para calcular custos de transporte
+void calcularCustosTransporte()
+{
+}
+
+// Fun√ß√£o para gerar 1 de viagem
+void gerarRelatorio(Destino destinos[], int numDestinos)
+{
+}
+
+void cadastroCidade()
+{
     FILE *arqCidade;
     Cidade *cid;
     int n, i;
@@ -153,45 +330,50 @@ void cadastroCidade(){
     printf("\nDigite quantas cidades vai cadastrar dessa vez: ");
     scanf("%d", &n);
 
-    cid = (Cidade*)calloc(n, sizeof(Cidade)); // O calloc aloca na memÛria o tamanho em bytes do conteudo da struct
-    arqCidade = fopen("cidades.txt","a");     // e usa esse tamanho para definir comeÁo e fim para cada linha dentro do txt;
-    
-    for (i=0; i<n; i++){
+    cid = (Cidade *)calloc(n, sizeof(Cidade)); // O calloc aloca na mem√≥ria o tamanho em bytes do conteudo da struct
+    arqCidade = fopen("cidades.txt", "a");     // e usa esse tamanho para definir come√ßo e fim para cada linha dentro do txt;
+
+    for (i = 0; i < n; i++)
+    {
         fflush(stdin);
-        printf("\nDefina o cÛdigo da cidade que vai cadastrar, %d™ posiÁ„o: ", i+1);
+        printf("\nDefina o c√≥digo da cidade que vai cadastrar, %d¬™ posi√ß√£o: ", i + 1);
         scanf("%d", &cid[i]);
         fflush(stdin);
-        printf("\nDigite o nome da cidade que vai cadastrar (sem acentos), %d™ posiÁ„o: ", i+1);
+        printf("\nDigite o nome da cidade que vai cadastrar (sem acentos), %d¬™ posi√ß√£o: ", i + 1);
         scanf("%[^\n]s", cid[i].nomecity);
-        fwrite(&cid[i],sizeof(Cidade),1,arqCidade);
+        fwrite(&cid[i], sizeof(Cidade), 1, arqCidade);
     }
     fclose(arqCidade);
-    free(cid); //para liberar o espaÁo da memÛria usado pela variavel "cid"
+    free(cid); // para liberar o espa√ßo da mem√≥ria usado pela variavel "cid"
 }
 
-void leituraCidade(){
+void leituraCidade()
+{
     Cidade cid1;
     FILE *arqCid;
-    arqCid = fopen("cidades.txt","r");
-    if (arqCid==NULL)
-     {
-                   printf("Erro ao abrir arquivo\n");
-                   getch();
-                   return;
-     }
+    arqCid = fopen("cidades.txt", "r");
+    if (arqCid == NULL)
+    {
+        printf("Erro ao abrir arquivo\n");
+        getch();
+        return;
+    }
     printf("\n=====================================\n");
-    printf("| C”DIGO |         NOME             |");
+    printf("| C√ìDIGO |         NOME             |");
     printf("\n=====================================");
-    while(fread(&cid1,sizeof(Cidade),1,arqCid)){ //o while ser· verdadeiro enquanto tiver conte˙do no txt;
-        printf("\n|  %-5d | %-22s   |", cid1.codcity,cid1.nomecity); // O -5 e o -22 È pra tirar os espaÁos em branco
-    }                                                                // que fica no txt, por que ele grava atÈ bytes
-    printf("\n=====================================\n");             // em branco;
+    while (fread(&cid1, sizeof(Cidade), 1, arqCid))
+    {                                                                 // o while ser√° verdadeiro enquanto tiver conte√∫do no txt;
+        printf("\n|  %-5d | %-22s   |", cid1.codcity, cid1.nomecity); // O -5 e o -22 √© pra tirar os espa√ßos em branco
+    }                                                                 // que fica no txt, por que ele grava at√© bytes
+    printf("\n=====================================\n");              // em branco;
     fclose(arqCid);
 }
 
-void menuCidades(){
+void menuCidades()
+{
     int x;
-    do{
+    do
+    {
         system("cls");
         printf("\n\n==================== MENU CIDADES ====================\n");
         printf("1. Voltar ao menu principal\n");
@@ -200,61 +382,64 @@ void menuCidades(){
         printf("4. \n");
         printf("5. \n");
         printf("========================================================\n\n");
-        printf("Escolha uma opÁ„o: ");
+        printf("Escolha uma op√ß√£o: ");
         scanf("%d", &x);
         system("cls");
-        switch (x) {
-                case 1:
-                    return;
-                    break;
-                case 2:
-                    cadastroCidade();
-                    break;
-                case 3:
-                    leituraCidade();
-                    break;
-                case 4:
+        switch (x)
+        {
+        case 1:
+            return;
+            break;
+        case 2:
+            cadastroCidade();
+            break;
+        case 3:
+            leituraCidade();
+            break;
+        case 4:
 
-                    break;
-                case 5:
+            break;
+        case 5:
 
-                    break;
-                default:
-                    printf("====================!!! OP«√O INV¡LIDA !!!====================\n");
-                    printf("\n");
-                    printf("Pressione qualquer tecla para tentar novamente.\n");
-                    getch();
-                    break;
+            break;
+        default:
+            printf("====================!!! OP√á√ÉO INV√ÅLIDA !!!====================\n");
+            printf("\n");
+            printf("Pressione qualquer tecla para tentar novamente.\n");
+            getch();
+            break;
         }
-    }while(x<1 || x>5);
+    } while (x < 1 || x > 5);
 }
 
-void cadastrarFeriados(){
-FILE *arqFeriado;
-Feriado cadastroFeriado;
-int n, x, y, num, sair, tipoferiado;
+void cadastrarFeriados()
+{
+    FILE *arqFeriado;
+    Feriado cadastroFeriado;
+    int n, x, y, num, sair, tipoferiado;
 
-//fflush(stdin);
-//printf("\nDigite quantos feriados vai cadastrar dessa vez: ");
-//scanf("%d", &num);
+    // fflush(stdin);
+    // printf("\nDigite quantos feriados vai cadastrar dessa vez: ");
+    // scanf("%d", &num);
 
-//cadastroFeriado = (Feriado*)calloc(num, sizeof(Feriado));
-arqFeriado = fopen("feriados.txt","a");
-
-
+    // cadastroFeriado = (Feriado*)calloc(num, sizeof(Feriado));
+    arqFeriado = fopen("feriados.txt", "a");
 
     printf("\n1.Cadastrar\n2.Voltar ao menu\n");
     scanf("%d", &sair);
-    if (sair==1){
+    if (sair == 1)
+    {
         printf("Digite o ano atual:");
         scanf("%d", &y);
-        bool anobissexto = ((y % 4 == 0)&&(y % 100 != 0));
-        do{
+        bool anobissexto = ((y % 4 == 0) && (y % 100 != 0));
+        do
+        {
             fflush(stdin);
-            printf("\n1.JANEIRO\n2.FEVEREIRO\n3.MAR«O\n4.ABRIL\n5.MAIO\n6.JUNHO\n7.JULHO\n8.AGOSTO\n9.SETEMBRO\n10.OUTUBRO\n11.NOVEMBRO\n12.DEZEMBRO\nDigite o mÍs:");
+            printf("\n1.JANEIRO\n2.FEVEREIRO\n3.MAR√áO\n4.ABRIL\n5.MAIO\n6.JUNHO\n7.JULHO\n8.AGOSTO\n9.SETEMBRO\n10.OUTUBRO\n11.NOVEMBRO\n12.DEZEMBRO\nDigite o m√™s:");
             scanf("%d", &n);
             printf("\n");
-            switch(n){
+            switch (n)
+            {
             case 1:
             case 3:
             case 5:
@@ -263,7 +448,8 @@ arqFeriado = fopen("feriados.txt","a");
             case 10:
             case 12:
                 cadastroFeriado.mes = n;
-                do{
+                do
+                {
                     printf("1  2  3  4  5  6\n7  8  9  10 11 12\n13 14 15 16 17 18\n19 20 21 22 23 24\n25 26 27 28 29 30 31\nDigite o dia:");
                     scanf("%d", &cadastroFeriado.dia);
                     fflush(stdin);
@@ -273,26 +459,30 @@ arqFeriado = fopen("feriados.txt","a");
                     printf("\n1.Nacional\n2.Estadual\n3.Municipal\nDigite o tipo do feriado: ");
                     scanf("%d", &cadastroFeriado.tipo);
                     fflush(stdin);
-                    printf("\n1.Facultativo\n2.N„o facultativo\nDigite se È facultativo ou n„o: ");
+                    printf("\n1.Facultativo\n2.N√£o facultativo\nDigite se √© facultativo ou n√£o: ");
                     scanf("%d", &cadastroFeriado.facultativo);
-                    fprintf(arqFeriado,"%d, %d, %s, %d\n", cadastroFeriado.mes, cadastroFeriado.dia, cadastroFeriado.nome, cadastroFeriado.tipo);
+                    fprintf(arqFeriado, "%d, %d, %s, %d\n", cadastroFeriado.mes, cadastroFeriado.dia, cadastroFeriado.nome, cadastroFeriado.tipo);
                     fflush(stdin);
-                }while (x<1 || x>31);
+                } while (x < 1 || x > 31);
 
                 break;
             case 2:
                 cadastroFeriado.mes = n;
-                if (anobissexto){
-                    do{
-                    printf("1  2  3  4  5  6\n7  8  9  10 11 12\n13 14 15 16 17 18\n19 20 21 22 23 24\n25 26 27 28 29\nDigite o dia:");
-                    scanf("%d", &x);
-                    }while (x<1 || x>29);
+                if (anobissexto)
+                {
+                    do
+                    {
+                        printf("1  2  3  4  5  6\n7  8  9  10 11 12\n13 14 15 16 17 18\n19 20 21 22 23 24\n25 26 27 28 29\nDigite o dia:");
+                        scanf("%d", &x);
+                    } while (x < 1 || x > 29);
                 }
-                else{
-                    do{
-                    printf("1  2  3  4  5  6\n7  8  9  10 11 12\n13 14 15 16 17 18\n19 20 21 22 23 24\n25 26 27 28\nDigite o dia:");
-                    scanf("%d", &x);
-                    }while (x<1 || x>28);
+                else
+                {
+                    do
+                    {
+                        printf("1  2  3  4  5  6\n7  8  9  10 11 12\n13 14 15 16 17 18\n19 20 21 22 23 24\n25 26 27 28\nDigite o dia:");
+                        scanf("%d", &x);
+                    } while (x < 1 || x > 28);
                 }
 
                 break;
@@ -301,38 +491,42 @@ arqFeriado = fopen("feriados.txt","a");
             case 9:
             case 11:
                 cadastroFeriado.mes = n;
-                do{
+                do
+                {
                     printf("1  2  3  4  5  6\n7  8  9  10 11 12\n13 14 15 16 17 18\n19 20 21 22 23 24\n25 26 27 28 29 30\nDigite o dia:");
                     scanf("%d", &x);
-                }while (x<1 || x>30);
+                } while (x < 1 || x > 30);
 
                 break;
             default:
-                printf("\nData inv·lida!");
+                printf("\nData inv√°lida!");
                 printf("\n");
                 printf("Pressione qualquer tecla para tentar novamente.\n");
                 getch();
                 break;
             }
-        }while (n<1 || n>12);
+        } while (n < 1 || n > 12);
     }
-    else if (sair==2){
+    else if (sair == 2)
+    {
         return;
         fclose(arqFeriado);
     }
-    else{
-    printf("\nOpÁ„o inv·lida. Mas ir· voltar ao menu mesmo assim.\n");
-    printf("\n");
-    printf("Pressione qualquer tecla para continuar.\n");
-    getch();
+    else
+    {
+        printf("\nOp√ß√£o inv√°lida. Mas ir√° voltar ao menu mesmo assim.\n");
+        printf("\n");
+        printf("Pressione qualquer tecla para continuar.\n");
+        getch();
     }
-fclose(arqFeriado);
-
+    fclose(arqFeriado);
 }
 
-void menuFeriados(){
-int x;
-    do{
+void menuFeriados()
+{
+    int x;
+    do
+    {
         system("cls");
         printf("\n\n==================== MENU FERIADOS ====================\n");
         printf("1. Voltar ao menu principal\n");
@@ -341,116 +535,133 @@ int x;
         printf("4. \n");
         printf("5. \n");
         printf("========================================================\n\n");
-        printf("Escolha uma opÁ„o: ");
+        printf("Escolha uma op√ß√£o: ");
         scanf("%d", &x);
         system("cls");
-        switch (x) {
-                case 1:
-                    return;
-                    break;
-                case 2:
-                    cadastrarFeriados();
-                    break;
-                case 3:
-                    
-                    break;
-                case 4:
+        switch (x)
+        {
+        case 1:
+            return;
+            break;
+        case 2:
+            cadastrarFeriados();
+            break;
+        case 3:
 
-                    break;
-                case 5:
+            break;
+        case 4:
 
-                    break;
-                default:
-                    printf("====================!!! OP«√O INV¡LIDA !!!====================\n");
-                    printf("\n");
-                    printf("Pressione qualquer tecla para tentar novamente.\n");
-                    getch();
-                    break;
+            break;
+        case 5:
+
+            break;
+        default:
+            printf("====================!!! OP√á√ÉO INV√ÅLIDA !!!====================\n");
+            printf("\n");
+            printf("Pressione qualquer tecla para tentar novamente.\n");
+            getch();
+            break;
         }
-    }while(x<1 || x>5);
+    } while (x < 1 || x > 5);
 }
 
-// FunÁ„o para exibir o menu principal
-int exibirMenu() {
+// Fun√ß√£o para exibir o relat√≥rio final com os valores selecionados
+void exibirRelatorio(const char *cidade, float valorHoteis, float valorRestaurantes)
+{
+    printf("\n=== Relatorio Final da sua Viagem ===\n");
+    printf("Cidade: %s\n", cidade);
+    printf("Valor total dos Hoteis: R$ %.2f\n", valorHoteis);
+    printf("Valor total dos Restaurantes: R$ %.2f\n", valorRestaurantes);
+    printf("Valor total do Transporte: R$ %.2f\n", valorTransporte);
+    // Calcular e exibir o valor total da viagem (pode incluir outros c√°lculos, como transporte)
+    float valorTotal = valorHoteis + valorRestaurantes;
+    printf("Valor total da Viagem: R$ %.2f\n", valorTotal);
+}
+
+// Fun√ß√£o para exibir o menu principal
+int exibirMenu()
+{
     printf("\n\n==================== MENU PRINCIPAL ====================\n");
-    printf("1. Informar o orÁamento\n");
-    printf("2. Visualizar opÁıes em relaÁ„o ‡s cidades\n");
-    printf("3. Visualizar opÁıes em relaÁ„o ‡s feriados\n");
-    printf("4. Visualizar opÁıes em relaÁ„o ‡s hotÈis e restaurantes\n");
-    printf("5. \n");
+    printf("1. Informar o or√ßamento\n");
+    printf("2. Visualizar op√ß√µes em rela√ß√£o √†s cidades\n");
+    printf("3. Visualizar op√ß√µes em rela√ß√£o √†s feriados\n");
+    printf("4. Visualizar op√ß√µes em rela√ß√£o aos hot√©is\n");
+    printf("5. Visualizar op√ß√µes em rela√ß√£o aos restaurantes\n");
     printf("6. \n");
     printf("7. \n");
     printf("8.\n");
     printf("9.\n");
     printf("10.\n");
     printf("11. Calcular custos de transporte\n");
-    printf("12. Gerar relatÛrio de viagem\n");
+    printf("12. Gerar relat√≥rio de viagem\n");
     printf("0. Sair\n");
     printf("========================================================\n\n");
-    printf("Escolha uma opÁ„o: ");
+    printf("Escolha uma op√ß√£o: ");
     int n;
     scanf("%d", &n);
-    return(n);
+    return (n);
 }
 
-int main() {
-	setlocale(LC_ALL,"portuguese");
+int main()
+{
+    setlocale(LC_ALL, "portuguese");
     Destino destinos[10];
     int numDestinos = 0;
     int opcao;
 
-    do {
+    do
+    {
         fflush(stdin);
         opcao = exibirMenu();
 
-        switch (opcao) {
-            case 0:
-                printf("\nSaindo...\n");
-                break;
-            case 1:
-                
-                break;
-            case 2:
-                menuCidades();
-                break;
-            case 3:
-                menuFeriados();
-                break;
-            case 4:
-                
-                break;
-            case 5:
-                
-                break;
-            case 6:
-                
-                break;
-            case 7:
-                
-                break;
-            case 8:
-                
-                break;
-            case 9:
-                
-                break;
-            case 10:
-                
-                break;
-            case 11:
-                
-                break;
-            case 12:
-                
-                break;
-            default:
-                printf("====================!!! OP«√O INV¡LIDA !!!====================\n");
-                printf("\n");
-                printf("Pressione qualquer tecla para tentar novamente.\n");
-                getch();
-                break;
+        switch (opcao)
+        {
+        case 0:
+            printf("\nSaindo...\n");
+            break;
+        case 1:
+
+            break;
+        case 2:
+            menuCidades();
+            break;
+        case 3:
+            menuFeriados();
+            break;
+        case 4:
+            Hotel();
+            break;
+        case 5:
+            Alimentacao();
+            break;
+        case 6:
+
+            break;
+        case 7:
+
+            break;
+        case 8:
+
+            break;
+        case 9:
+
+            break;
+        case 10:
+
+            break;
+        case 11:
+
+            break;
+        case 12:
+            exibirRelatorio();
+            break;
+        default:
+            printf("====================!!! OP√á√ÉO INV√ÅLIDA !!!====================\n");
+            printf("\n");
+            printf("Pressione qualquer tecla para tentar novamente.\n");
+            getch();
+            break;
         }
     } while (opcao != 0);
     return 0;
 }
-
