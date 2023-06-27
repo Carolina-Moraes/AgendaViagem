@@ -4,6 +4,7 @@
 #include <conio.h>
 #include <string.h>
 #include <ctype.h>
+#include <windows.h>
 
 // Olá carol
 
@@ -144,10 +145,6 @@ void obterInformacoes(Destino destinos[], int numDestinos)
     printf("Preço médio do restaurante: %.2f\n", destinoEscolhido.precoRestaurante);
 }
 
-// Função para selecionar os hoteis
-Hotel()
-{
-}
 // Função para informar sobre o hotel
 float Hotel()
 {
@@ -177,7 +174,7 @@ float Hotel()
     printf("Quantidade de Vezes: %d\n", quantidade);
     printf("Valor Total: R$ %.2f\n", valorTotalHotel);
 
-    return (valorTotalHotel);
+    return valorTotalHotel;
 }
 
 // Função para informar sobre a alimentação
@@ -206,7 +203,7 @@ float Alimentacao()
     printf("Quantidade de Vezes: %d\n", quantidade);
     printf("Valor Total: R$ %.2f\n", valorTotalRefeicao);
 
-    return (valorTotalRefeicao);
+    return valorTotalRefeicao;
 }
 /*// Função para selecionar a cidade do restaurante
 void menuRestaurantes() {
@@ -604,7 +601,12 @@ int exibirMenu()
 
 int main()
 {
-    setlocale(LC_ALL, "portuguese");
+    // Define o valor das páginas de código UTF8 e default do Windows
+    UINT CPAGE_UTF8 = 65001;
+    UINT CPAGE_DEFAULT = GetConsoleOutputCP();
+
+    // Define codificação como sendo UTF-8
+    SetConsoleOutputCP(CPAGE_UTF8);
     Destino destinos[10];
     int numDestinos = 0;
     int opcao;
