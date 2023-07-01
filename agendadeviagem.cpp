@@ -37,39 +37,68 @@ typedef struct{
     int mesinicial;
     int diafinal;
     int mesfinal;
+    int ano;
 } Datas;
 
 void cadastroAgenda(){
-	FILE *agenda, *feri;
-    Feriado fer;
+	FILE *agenda;
     Datas data;
-
-    char facu[20]={0}, tipo[20]={0}, c, meses[13][15]={"gambiarra", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"};
     
-    int y;
 
 	bool dialimite;
-	bool meslimite;	
-	bool datalimite;
-	bool anobissexto = ((y % 4 == 0)&&(y % 100 != 0));
+	bool meslimite=0;	
+	bool datalimite=0;
+    int x;
 
 	printf("\nDigite o ano:");
-	scanf("%d", &y);
-	printf("\n1.JANEIRO\n2.FEVEREIRO\n3.MARÇO\n4.ABRIL\n5.MAIO\n6.JUNHO\n7.JULHO\n8.AGOSTO\n9.SETEMBRO\n10.OUTUBRO\n11.NOVEMBRO\n12.DEZEMBRO\nDigite o MÊS no qual a viagem se INICIARÁ:");
-	scanf("%d", &data.mesinicial);
-	printf("\nDigite o DIA no qual a viagem se INICIARÁ: ");
-	scanf("%d", &data.diainicial);
-	system("cls");
-	printf("\n1.JANEIRO\n2.FEVEREIRO\n3.MARÇO\n4.ABRIL\n5.MAIO\n6.JUNHO\n7.JULHO\n8.AGOSTO\n9.SETEMBRO\n10.OUTUBRO\n11.NOVEMBRO\n12.DEZEMBRO\nDigite o MÊS no qual a viagem TERMINARÁ:");
-	scanf("%d", &data.mesfinal);
-	printf("\nDigite o DIA no qual a viagem se TERMINARÁ: ");
-	scanf("%d", &data.diafinal);
+	scanf("%d", &data.ano);
 	
+	bool anobissexto = ((data.ano % 4 == 0) && (data.ano % 100 != 0)) || (data.ano % 400 == 0);
+	do{
+        printf("\n1.JANEIRO\n2.FEVEREIRO\n3.MARÇO\n4.ABRIL\n5.MAIO\n6.JUNHO\n7.JULHO\n8.AGOSTO\n9.SETEMBRO\n10.OUTUBRO\n11.NOVEMBRO\n12.DEZEMBRO\nDigite o MÊS no qual a viagem se INICIARÁ:");
+        scanf("%d", &data.mesinicial);
+        switch(data.mesinicial){
+            case 1:
+                case 3:
+                case 5:
+                case 7:
+                case 8:
+                case 10:
+                case 12:
+                x = 31;
+            break;
+            case 4:
+            case 6:
+            case 9:
+            case 11:
+                x = 30;
+            break;
+            case 2:
+                if (anobissexto)
+                x = 29;
+                else
+                x = 28;
+            break;
+        }
+    }while(data.mesinicial < 1 || data.mesinicial > 12);
+    do{
+        printf("\nDigite o DIA no qual a viagem se INICIARÁ: ");
+        scanf("%d", &data.diainicial);
+    }while(data.diainicial < 1 || data.diainicial > x);
+	system("cls");
+    do{
+        printf("\n1.JANEIRO\n2.FEVEREIRO\n3.MARÇO\n4.ABRIL\n5.MAIO\n6.JUNHO\n7.JULHO\n8.AGOSTO\n9.SETEMBRO\n10.OUTUBRO\n11.NOVEMBRO\n12.DEZEMBRO\nDigite o MÊS no qual a viagem TERMINARÁ:");
+        scanf("%d", &data.mesfinal);
+    }while(data.mesfinal < 1 || data.mesfinal > 12);
+    do{
+        printf("\nDigite o DIA no qual a viagem se TERMINARÁ: ");
+        scanf("%d", &data.diafinal);
+    }while(data.diafinal < 1 || data.diafinal > x);
 	data.diamedio = data.diainicial;
 	data.mesmedio = data.mesinicial;
-
-    do{
-        
+	data.diafinal = data.diafinal + 1;
+    agenda = fopen("agenda", "w+b");
+    do{    
         if (data.diamedio>28){
             switch(data.mesmedio){
                 case 1:
@@ -78,7 +107,6 @@ void cadastroAgenda(){
                 case 7:
                 case 8:
                 case 10:
-                case 12:
                 if (data.diamedio >31){
                     data.diamedio=1;
                     data.mesmedio++;
@@ -93,14 +121,20 @@ void cadastroAgenda(){
                     data.mesmedio++;
                     }
                     break;
+                case 12:
+                    if (data.diamedio >31){
+                    data.diamedio=1;
+                    data.mesmedio=1;
+                    data.ano++;
+                    }
+                    break;
                 case 2:
                     if (anobissexto){
                     if (data.diamedio > 29){
                     data.diamedio=1;
                     data.mesmedio++;
                     }
-                    break;
-                }else if (!anobissexto){
+                    }else if (!anobissexto){
                     if (data.diamedio > 28){
                     data.diamedio=1;
                     data.mesmedio++;
@@ -110,17 +144,19 @@ void cadastroAgenda(){
             }
         }
 
+	printf("\n\n%d / %d / %d", data.diamedio, data.mesmedio, data.ano);
+	
+    //getch();
+    fwrite(&data, sizeof(Datas),1,agenda);
     data.diamedio++;
 
     dialimite = (data.diamedio == data.diafinal);
     meslimite = (data.mesmedio == data.mesfinal);
+    
     datalimite = (dialimite && meslimite);
-
-    agenda = fopen("agenda", "a+b");
-    fwrite(&data, sizeof(Datas),1,agenda);
-    fclose(agenda);
-
+    printf("\n%s", datalimite ? "true" : "false");
     }while(not datalimite);
+    fclose(agenda);
 
 }
 
@@ -130,119 +166,125 @@ void leituraAgenda(){
     Feriado fer;
     Datas data;
 
-    char facu[20]={0}, tipo[20]={0}, c, meses[13][15]={"zero", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"};
+    char facu[20]={0}, tipo[20]={0}, meses[13][15]={"zero", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"}, Scidade[25]={0};
+    int EOF_ctrl;
 
         feri = fopen("feriados", "r+b");
         agenda = fopen("agenda", "r+b");
-        char Scidade[25]={0};
 
-        if (feri==NULL){
+        if (agenda==NULL){
             printf("\nErro ao abrir arquivo da agenda!");
         }
-
         else{
             if (feri==NULL){
                 printf("\nErro ao abrir arquivo de feriados, ou arquivo não existe.");
             }
             else{
-                while((!feof(feri)) && (!feof(agenda))){
-                fread(&fer,sizeof(Feriado),1,feri);
-                switch(fer.tipo){
-                        case 1:
-                            strcpy(tipo,"Nacional");
-                            break;
-                        case 2:
-                            strcpy(tipo,"Estadual");
-                            break;
-                        case 3:
-                            strcpy(tipo,"Municipal");
-                            break;
-                        default:
-                        break;
-                }
-                switch(fer.facultativo){
-                        case 1:
-                            strcpy(facu,"Facultativo");
-                            break;
-                        case 2:
-                            strcpy(facu,"Não Facultativo");
-                            break;
-                        default:
-                            break;
-                }
+                    //while((fread(&data, sizeof(Datas), 1, agenda) == 1) || (fread(&fer, sizeof(Feriado), 1, feri) == 1)){
+                    while((fread(&data, sizeof(Datas), 1, agenda) == 1)){
 
-                printf("\n%i de %s", data.diamedio, meses[data.mesmedio]);
+                        printf("\n%i de %s de %i", data.diamedio, meses[data.mesmedio], data.ano);
 
-                switch(fer.cidade){     //Este switch converte o código da cidade, que o usuário selecionou, para uma string com o nome da cidade
-                    case 0:
-                        strcpy(Scidade," ");
-                        break;
-                    case 1:
-                        strcpy(Scidade,"Caxias do Sul");
-                        break;
-                    case 2:
-                        strcpy(Scidade,"Farroupilha");
-                        break;
-                    case 3:
-                        strcpy(Scidade,"Bento Gonçalves");
-                        break;
-                    case 4:
-                        strcpy(Scidade,"Gramado");
-                        break;
-                    case 5:
-                        strcpy(Scidade,"Porto Alegre");
-                        break;
-                    case 6:
-                        strcpy(Scidade,"Nova Petrópolis");
-                        break;
-                    case 7:
-                        strcpy(Scidade,"Capão da Canoa");
-                        break;
-                    case 8:
-                        strcpy(Scidade,"Carlos Barbosa");
-                        break;
-                    case 9:
-                        strcpy(Scidade,"Garibaldi");
-                        break;
-                    case 10:
-                        strcpy(Scidade,"São Lourenço do Sul");
-                        break;
-                    case 11:
-                        strcpy(Scidade,"Rio Grande");
-                        break;
-                    case 12:
-                        strcpy(Scidade,"Tramandaí");
-                        break;
-                    case 13:
-                        strcpy(Scidade,"Santiago");
-                        break;
-                    case 14:
-                        strcpy(Scidade,"Cambará do Sul");
-                        break;
-                    case 15:
-                        strcpy(Scidade,"Bom Jesus");
-                        break;
-                    case 16:
-                        strcpy(Scidade,"Bom Princípio");
-                        break;
-                    case 17:
-                        strcpy(Scidade,"Pelotas");
-                        break;
-                    case 18:
-                        strcpy(Scidade,"Erechim");
-                        break;
-                    case 19:
-                        strcpy(Scidade,"Atlântida");
-                        break;
-                    case 20:
-                        strcpy(Scidade,"Sant'Ana do Livramento");
-                        break;
-                }
-                if ((data.diamedio == fer.dia) && (data.mesmedio == fer.mes))
-                    printf(" == %s (%s e %s) -- %s", fer.nome, tipo, facu, Scidade);
-
-                }
+                            rewind(feri);
+                            TAGFERIADO:
+                            fread(&fer, sizeof(Feriado), 1, feri);
+                            EOF_ctrl = feof(feri);
+                            if (EOF_ctrl == 0){
+                                if ((data.diamedio == fer.dia) && (data.mesmedio == fer.mes)){
+                                    switch(fer.cidade){     //Este switch converte o código da cidade, que o usuário selecionou, para uma string com o nome da cidade
+                                        case 0:
+                                            strcpy(Scidade," ");
+                                            break;
+                                        case 1:
+                                            strcpy(Scidade,"Caxias do Sul");
+                                            break;
+                                        case 2:
+                                            strcpy(Scidade,"Farroupilha");
+                                            break;
+                                        case 3:
+                                            strcpy(Scidade,"Bento Gonçalves");
+                                            break;
+                                        case 4:
+                                            strcpy(Scidade,"Gramado");
+                                            break;
+                                        case 5:
+                                            strcpy(Scidade,"Porto Alegre");
+                                            break;
+                                        case 6:
+                                            strcpy(Scidade,"Nova Petrópolis");
+                                            break;
+                                        case 7:
+                                            strcpy(Scidade,"Capão da Canoa");
+                                            break;
+                                        case 8:
+                                            strcpy(Scidade,"Carlos Barbosa");
+                                            break;
+                                        case 9:
+                                            strcpy(Scidade,"Garibaldi");
+                                            break;
+                                        case 10:
+                                            strcpy(Scidade,"São Lourenço do Sul");
+                                            break;
+                                        case 11:
+                                            strcpy(Scidade,"Rio Grande");
+                                            break;
+                                        case 12:
+                                            strcpy(Scidade,"Tramandaí");
+                                            break;
+                                        case 13:
+                                            strcpy(Scidade,"Santiago");
+                                            break;
+                                        case 14:
+                                            strcpy(Scidade,"Cambará do Sul");
+                                            break;
+                                        case 15:
+                                            strcpy(Scidade,"Bom Jesus");
+                                            break;
+                                        case 16:
+                                            strcpy(Scidade,"Bom Princípio");
+                                            break;
+                                        case 17:
+                                            strcpy(Scidade,"Pelotas");
+                                            break;
+                                        case 18:
+                                            strcpy(Scidade,"Erechim");
+                                            break;
+                                        case 19:
+                                            strcpy(Scidade,"Atlântida");
+                                            break;
+                                        case 20:
+                                            strcpy(Scidade,"Sant'Ana do Livramento");
+                                            break;
+                                    }
+                                    switch(fer.tipo){
+                                            case 1:
+                                                strcpy(tipo,"Nacional");
+                                                break;
+                                            case 2:
+                                                strcpy(tipo,"Estadual");
+                                                break;
+                                            case 3:
+                                                strcpy(tipo,"Municipal");
+                                                break;
+                                            default:
+                                            break;
+                                    }
+                                    switch(fer.facultativo){
+                                            case 1:
+                                                strcpy(facu,"Facultativo");
+                                                break;
+                                            case 2:
+                                                strcpy(facu,"Não Facultativo");
+                                                break;
+                                            default:
+                                                break;
+                                    }
+                                    printf(" == %s (%s e %s) | %s", fer.nome, tipo, facu, Scidade);
+                                }
+                                goto TAGFERIADO;
+                            }
             }
+        }
     }
 }
 
@@ -345,7 +387,11 @@ float Hotel(int cidade, char Scidade[25])
     float valorTotalHotel;
 
     arqVisita = fopen("visita","r+b");
-
+    arqVisita = fopen("visita", "rb");
+    if (arqVisita == NULL){
+        printf("\n\nErro ao abrir o arquivo de locais, ou o arquivo é inexistente");
+    }
+    else{
     printf("\n ==================== Hotel ====================\n\n");
     while(fread(&vis, sizeof(Visita),1,arqVisita)){
         if ((vis.codCity == cidade) && (vis.tipo == 1)){
@@ -369,6 +415,7 @@ float Hotel(int cidade, char Scidade[25])
             printf("Valor Total: R$ %.2f\n", valorTotalHotel);
         }
     }
+    }
     fclose(arqVisita);
     return valorTotalHotel;
 
@@ -382,7 +429,12 @@ float Alimentacao(int cidade, char Scidade[25])
     
     float valorTotalRefeicao=0;
     int quantidade, n, x;
-
+    
+    arqVisita = fopen("visita", "rb");
+    if (arqVisita == NULL){
+        printf("\n\nErro ao abrir o arquivo de locais, ou o arquivo é inexistente");
+    }
+    else{
     printf("\n ==================== Alimentação ====================\n\n");
     while(fread(&vis, sizeof(Visita),1,arqVisita)){
         if ((vis.codCity == cidade) && (vis.tipo == 2)){
@@ -409,6 +461,7 @@ float Alimentacao(int cidade, char Scidade[25])
             printf("Quantidade de Vezes: %d\n", quantidade);
             printf("Valor Total: R$ %.2f\n", valorTotalRefeicao);
         }
+    }
     }
     fclose(arqVisita);
     return valorTotalRefeicao;
@@ -546,13 +599,16 @@ int leituraCidade()
 void cadastrarFeriados(int cidade){
 FILE *arqFeriado;
 Feriado cadastroFeriado;
-int n, x, y, num, sair, tipoferiado;
+int n, x, y;
 
 arqFeriado = fopen("feriados","a+b");
+    printf("\nQuantos feriados deseja cadastrar de uma vez: ");
+    scanf("%d", &x);
 
     printf("Digite o ano atual:");
     scanf("%d", &y);
-    bool anobissexto = ((y % 4 == 0)&&(y % 100 != 0));
+    bool anobissexto = ((y % 4 == 0) && (y % 100 != 0)) || (y % 400 == 0);
+    for (int i=0; i<x; i++){
     do{
         fflush(stdin);
         printf("\n1.JANEIRO\n2.FEVEREIRO\n3.MARÇO\n4.ABRIL\n5.MAIO\n6.JUNHO\n7.JULHO\n8.AGOSTO\n9.SETEMBRO\n10.OUTUBRO\n11.NOVEMBRO\n12.DEZEMBRO\nDigite o mês:");
@@ -700,6 +756,7 @@ arqFeriado = fopen("feriados","a+b");
             break;
         }
     }while (n<1 || n>12);
+    }
 fclose(arqFeriado);
 }
 
@@ -759,7 +816,7 @@ void leituraFeriados(){
             }
             else{
                 
-                 printf("\n| %-22s   |   %-10s  |   %-15s    |  %-5d |  %-15s ", cadastroFeriado.nome, tipo, facu, cadastroFeriado.dia, meses[cadastroFeriado.mes]);
+                 printf("\n| %-30s   |   %-10s  |   %-15s    |  %-5d |  %-15s ", cadastroFeriado.nome, tipo, facu, cadastroFeriado.dia, meses[cadastroFeriado.mes]);
                 
             }
         }
@@ -970,14 +1027,27 @@ int main()
                 printf("\nPressione qualquer tecla para continuar.\n");
                 getch();
                 system("cls");
+                break;
             }
             else{
-            menuFeriados(cidade);
+            	menuFeriados(cidade);
             }
             break;
         case 4:
-            
             if (cidade==0){
+                printf("\nPrimeiro selecione uma cidade da listagem.");
+                printf("\n");
+                printf("\nPressione qualquer tecla para continuar.\n");
+                getch();
+                system("cls");
+                break;
+            }
+            else{
+                cadastroVisita(cidade);
+            }
+            break;
+        case 5:
+        	if (cidade==0){
                 printf("\nPrimeiro selecione uma cidade da listagem.");
                 printf("\n");
                 printf("\nPressione qualquer tecla para continuar.\n");
@@ -985,20 +1055,36 @@ int main()
                 system("cls");
             }
             else{
-                cadastroVisita(cidade);
-            }
-            break;
-        case 5:
             totalHotel = Hotel(cidade, Scidade);
+        	}
             break;
         case 6:
+        	if (cidade==0){
+                printf("\nPrimeiro selecione uma cidade da listagem.");
+                printf("\n");
+                printf("\nPressione qualquer tecla para continuar.\n");
+                getch();
+                system("cls");
+                break;
+            }
+            else{
             totalAlimento = Alimentacao(cidade, Scidade);
+            }
             break;
         case 7:
             totalTransporte = calcularCustoTransporte();
             break;
-        case 8:
+        case 8:if (cidade==0){
+                printf("\nPrimeiro selecione uma cidade da listagem.");
+                printf("\n");
+                printf("\nPressione qualquer tecla para continuar.\n");
+                getch();
+                system("cls");
+                break;
+            }
+            else{
             exibirRelatorio(totalHotel, totalAlimento, totalTransporte, orcamento, Scidade);
+            }
             break;
         case 9:
         	cadastroAgenda();
@@ -1017,7 +1103,7 @@ int main()
         default:
             printf("====================!!! OPÇÃO INVÁLIDA !!!====================\n");
             printf("\n");
-            printf("Pressione qualquer tecla para tentar novamente.\n");
+            printf("\nPressione qualquer tecla para tentar novamente.\n");
             getch();
             break;
         }
