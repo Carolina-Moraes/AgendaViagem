@@ -160,7 +160,7 @@ void cadastroAgenda(){
 
 }
 
-void leituraAgenda(){
+void leituraAgenda(int cidade){
 
 	FILE *agenda, *feri;
     Feriado fer;
@@ -179,8 +179,7 @@ void leituraAgenda(){
             if (feri==NULL){
                 printf("\nErro ao abrir arquivo de feriados, ou arquivo não existe.");
             }
-            else{
-                    //while((fread(&data, sizeof(Datas), 1, agenda) == 1) || (fread(&fer, sizeof(Feriado), 1, feri) == 1)){
+
                     while((fread(&data, sizeof(Datas), 1, agenda) == 1)){
 
                         printf("\n%i de %s de %i", data.diamedio, meses[data.mesmedio], data.ano);
@@ -279,14 +278,21 @@ void leituraAgenda(){
                                             default:
                                                 break;
                                     }
-                                    printf(" == %s (%s e %s) | %s", fer.nome, tipo, facu, Scidade);
+                                    if ((fer.cidade == cidade) && (fer.tipo == 3))
+                                    {
+                                        printf(" == %s (%s e %s) em %s", fer.nome, tipo, facu, Scidade);
+                                        }
+                                    else if ((fer.tipo == 1) || (fer.tipo == 2))
+                                    {
+                                         printf(" == %s (%s e %s)", fer.nome, tipo, facu);
+                                         }
                                 }
                                 goto TAGFERIADO;
                             }
             }
         }
     }
-}
+
 
 void cadastroVisita(int cidade){
     FILE *arqVisita;
@@ -294,7 +300,7 @@ void cadastroVisita(int cidade){
     int n, x=0;
 
     CODIGOREPETIDO:
-
+    vis.tipo = 0;
     arqVisita = fopen("visita","a+b");
     rewind(arqVisita);
     do{
@@ -303,11 +309,9 @@ void cadastroVisita(int cidade){
     scanf("%d", &n);
     switch(n){
         case 1:
-            vis.tipo = n;
             vis.codCity = cidade;
             printf("\nDefina um código para o estabelecimento: ");
             scanf("%d", &x);
-
             while(!feof(arqVisita)){
                 fread(&vis, sizeof(Visita),1,arqVisita);
                     if ((x == vis.codLugar) && (cidade == vis.codCity)){
@@ -319,17 +323,18 @@ void cadastroVisita(int cidade){
                         goto CODIGOREPETIDO;
                     }
             }
-
-            vis.codLugar = x;
+            
             fflush(stdin);
             printf("\nDigite o nome do estabelecimento: ");
             gets(vis.nomeLugar);
             printf("\nDigite o valor da diária desse hotel: ");
             scanf("%f", &vis.diaria);
+            vis.tipo = 1;
+            vis.codLugar = x;
             fwrite(&vis, sizeof(Visita),1,arqVisita);
             break;
         case 2:
-            vis.tipo = n;
+        fflush(stdin);
             vis.codCity = cidade;
             printf("\nDefina um código para o estabelecimento: ");
             scanf("%d", &x);
@@ -344,7 +349,6 @@ void cadastroVisita(int cidade){
                     goto CODIGOREPETIDO;
                 }
             }
-            vis.codLugar = x;
             fflush(stdin);
             printf("\nDigite o nome do estabelecimento: ");
             gets(vis.nomeLugar);
@@ -362,9 +366,10 @@ void cadastroVisita(int cidade){
                         break;
                 }
                 printf("\nDigite o valor da opção de %s custo desse restaurante em R$: ", preco);
-                scanf("%f", &vis.BMA);
+                scanf("%f", &vis.BMA[i]);
             }
-
+            vis.codLugar = x;
+            vis.tipo = 2;
             fwrite(&vis, sizeof(Visita),1,arqVisita);
             break;
         default:
@@ -386,7 +391,6 @@ float Hotel(int cidade, char Scidade[25])
     int quantidade, n;
     float valorTotalHotel;
 
-    arqVisita = fopen("visita","r+b");
     arqVisita = fopen("visita", "rb");
     if (arqVisita == NULL){
         printf("\n\nErro ao abrir o arquivo de locais, ou o arquivo é inexistente");
@@ -395,11 +399,13 @@ float Hotel(int cidade, char Scidade[25])
     printf("\n ==================== Hotel ====================\n\n");
     while(fread(&vis, sizeof(Visita),1,arqVisita)){
         if ((vis.codCity == cidade) && (vis.tipo == 1)){
-            printf("\n%-22s | Diária R$%-5.2f", vis.nomeLugar, vis.diaria);
+            
+            printf("\n  %i.  %-22s | Diária R$ %-5.2f", vis.codLugar, vis.nomeLugar, vis.diaria);
         }
     }
-    printf("\nSelecione o Hotel que deseja se hospedar.\n\nCÓDIGO == ");
+    printf("\n\nSelecione o Hotel que deseja se hospedar.\n\nCÓDIGO == ");
     scanf("%d", &n);
+    rewind(arqVisita);
     while(fread(&vis, sizeof(Visita),1,arqVisita)){
         if ((vis.codLugar == n) && (vis.codCity == cidade))
         {
@@ -438,16 +444,17 @@ float Alimentacao(int cidade, char Scidade[25])
     printf("\n ==================== Alimentação ====================\n\n");
     while(fread(&vis, sizeof(Visita),1,arqVisita)){
         if ((vis.codCity == cidade) && (vis.tipo == 2)){
-            printf("\n%-22s | Baixo custo %.2f | Médio custo %.2f | Alto custo %.2f", vis.nomeLugar, vis.BMA[0], vis.BMA[1], vis.BMA[2]);
+            printf("\n  %i.  %-22s | Baixo custo %.2f | Médio custo %.2f | Alto custo %.2f", vis.codLugar, vis.nomeLugar, vis.BMA[0], vis.BMA[1], vis.BMA[2]);
         }
     }
-    printf("\nSelecione o Restaurante que deseja marcar uma reserva.\n\nCÓDIGO == ");
+    printf("\n\nSelecione o Restaurante que deseja marcar uma reserva.\n\nCÓDIGO == ");
     scanf("%d", &n);
-    while(fread(&vis, sizeof(Visita),1,arqVisita)){
-        if ((vis.codLugar == n) && (vis.codCity == cidade))
-        {
+    rewind(arqVisita);
+    while((fread(&vis, sizeof(Visita),1,arqVisita)) == 1){
+        printf("\n == %i e %i ==\n", n, vis.codLugar);
+        if (vis.codLugar == n){
             do{
-            printf("\nSelecione sua opção:\n1.Baixo custo (R$%.2f)\n2.Médio Custo (R$%.2f)\n3.Alto custo (R$%.2f)", vis.BMA[0], vis.BMA[1], vis.BMA[2]);
+            printf("\nSelecione sua opção:\n1.Baixo custo (R$%.2f)\n2.Médio Custo (R$%.2f)\n3.Alto custo (R$%.2f)\n\n==", vis.BMA[0], vis.BMA[1], vis.BMA[2]);
             scanf("%d", &x);
             }while(x<1 || x>3);
             x = x-1;
@@ -875,7 +882,7 @@ void exibirRelatorio(float valorHoteis, float valorRestaurantes, float valorTran
         printf("\n\nSeu orçamento não será suficiente para bancar os custos da viagem!\n\nAinda irá faltar R$%.2f", orcamento);
     }
     else if (orcamento > 0){
-        printf("\n\nApós todos esses custos, ainda lhe sobraram R$%.2f do orçamento incial", orcamento);
+        printf("\n\nApós todos esses custos, ainda lhe sobraram R$%.2f do orçamento inicial", orcamento);
     }
     else{
         printf("\nVocê gastou exatamente a quantidade que definiu como orçamento para a viagem!\n\nParabéns pelo excelente planejamento financeiro!");
@@ -1097,7 +1104,7 @@ int main()
                 getch();
             }
             else{
-            leituraAgenda();
+            leituraAgenda(cidade);
             }
         	break;
         default:
